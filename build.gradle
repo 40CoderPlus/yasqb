@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'idea'
+
+    id "com.palantir.baseline-idea" version "4.183.0"
+    id "com.diffplug.spotless" version "6.11.0"
+    id "org.owasp.dependencycheck" version "7.2.1"
+}
+
+group = 'com.fortycoderplus.yqsqb'
+version = '1.0.0'
+
+apply plugin: 'com.palantir.baseline-format'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    // lombok
+    compileOnly "org.projectlombok:lombok:1.18.24"
+    annotationProcessor "org.projectlombok:lombok:1.18.24"
+    // mapstruct
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    // test
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+}
+
+java {
+    withSourcesJar()
+}
+
+plugins.withType(JavaPlugin) {
+    project.sourceCompatibility = JavaVersion.VERSION_11
+}
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+spotless {
+    java {
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+
+        palantirJavaFormat()
+        formatAnnotations()
+    }
+}
